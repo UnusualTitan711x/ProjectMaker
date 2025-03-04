@@ -21,11 +21,31 @@ def CreateWebProject():
     project_name = input("What is the name of the project: ")
     dir = input("Please enter the directory for the project: ")
     os.chdir(dir)
-    os.mkdir(project_name)
+
+    if os.path.exists(f"{dir}\{project_name}"):
+        pass
+    else:
+        os.mkdir(project_name)
 
     html_file = open(f"{dir}\{project_name}\index.html", "w+")
     css_file = open(f"{dir}\{project_name}\style.css", "w+")
     js_file = open(f"{dir}\{project_name}\script.js", "w+")
+
+    html_template = """<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{project_name}</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        
+        <script src="script.js"></script>
+    </body>
+    </html>"""
+
+    html_file.write(html_template)
 
     html_file.close()
     css_file.close()
