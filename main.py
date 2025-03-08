@@ -16,17 +16,17 @@ def main():
     print("Welcome to Project Maker.")
     print("Please make sure you have cd to the directory you want your project in.")
     print("What type of project will it be?")
-    print("1. Web project\n2. Godot Project")
+    print("1. Web project\n2. Godot Project (v4.4)")
     choice = int(input("Choice: "))
+    name = input("What is the name of your project?: ")
 
     match choice:
         case 1:
-            create_web()
-        
+            create_web(name)
+        case 2:
+            create_godot(name)
 
-def create_web():
-    project_name = input("What is the name of the project: ")
-
+def create_web(project_name):
     project_path = os.path.join(os.getcwd(), project_name)
     
     # Make sure to control which directory to use
@@ -61,8 +61,58 @@ def create_web():
 
             f.close()
 
-    click.echo("Process Completed!")
+    click.echo(f"Web project '{project_name}' created successfully.")
 
+def create_godot(project_name):
+    project_path = os.path.join(os.getcwd(), project_name)
+    
+    # Make sure to control which directory to use
+    if not os.path.exists(project_path):
+        os.makedirs(project_path)
+    else:
+        click.echo("Directory already exists.")
+        return 
+    
+    for folder in config["project_templates"]["godot"]["folders"]:
+        folder_path = os.path.join(project_path, folder)
+        os.makedirs(folder_path)
+    
+    for file in config["project_templates"]["godot"]["files"]:
+        file_path = os.path.join(project_path, file)
+        with open(file_path, "w+") as f:
+            if file == "project.godot":
+                godot_template = f"""; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="{project_name}"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+"""
+
+                f.write(godot_template)
+            elif file == "README.md":
+                f.write(f"{project_name} - Godot Project")
+            elif file == ".gitatttributes":
+                f.write("""# Normalize EOL for all files that Git considers text files.\n* text=auto eol=lf""")
+            elif file == ".gitignore":
+                f.write("# Godot 4+ specific ignores\n.godot/\n/android/")
+
+            f.close()
+
+    click.echo(f"Godot project '{project_name}' created successfully.")
 
 
 main()

@@ -3,8 +3,8 @@ project_templates:
     folders: [scenes, scripts, assets]
     files:
       - project.godot
-      - .gitattributes.txtfile
-      - .gitignore.txtfile
+      - .gitattributes
+      - .gitignore
       - README.md
   
   web:
