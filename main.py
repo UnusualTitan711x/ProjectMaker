@@ -2,6 +2,7 @@ import os
 import click
 import yaml
 
+
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
@@ -12,21 +13,16 @@ with open("config.yaml", "r") as file:
 # # Create a file. w+ is to create one if it isn't already existing
 # test_file=open(r"TestFolder/test1.md", "w+")
 
-def main():
-    print("Welcome to Project Maker.")
-    print("Please make sure you have cd to the directory you want your project in.")
-    print("What type of project will it be?")
-    print("1. Web project\n2. Godot Project (v4.4)")
-    choice = int(input("Choice: "))
-    name = input("What is the name of your project?: ")
+@click.group()
+def cli():
+    """ProjectMaker CLI Tool"""
+    pass
 
-    match choice:
-        case 1:
-            create_web(name)
-        case 2:
-            create_godot(name)
-
+@click.command()
+@click.argument("project_name")
 def create_web(project_name):
+    """Creates a basic Web Project"""
+
     project_path = os.path.join(os.getcwd(), project_name)
     
     # Make sure to control which directory to use
@@ -63,7 +59,12 @@ def create_web(project_name):
 
     click.echo(f"Web project '{project_name}' created successfully.")
 
+
+@click.command()
+@click.argument("project_name")
 def create_godot(project_name):
+    """Creates a Godot 4.4 Project"""
+
     project_path = os.path.join(os.getcwd(), project_name)
     
     # Make sure to control which directory to use
@@ -114,5 +115,53 @@ renderer/rendering_method="forward_plus"
 
     click.echo(f"Godot project '{project_name}' created successfully.")
 
+def create_unity(project_name):
+    """Creates a Unity Project"""
 
-main()
+    project_path = os.path.join(os.getcwd(), project_name)
+    
+    # Make sure to control which directory to use
+    if not os.path.exists(project_path):
+        os.makedirs(project_path)
+    else:
+        click.echo("Directory already exists.")
+        return 
+    
+    for folder in config["project_templates"]["unity"]["folders"]:
+        folder_path = os.path.join(project_path, folder)
+        os.makedirs(folder_path)
+    
+    for file in config["project_templates"]["unity"]["files"]:
+        file_path = os.path.join(project_path, file)
+        with open(file_path, "w+") as f:
+            if file == "README.md":
+                f.write(f"{project_name} - Unity Project")
+            if file == ".gitignore":
+                unity_gitignore = """  
+[Ll]ibrary/  
+[Tt]emp/  
+[Oo]bj/  
+[Bb]uild/  
+[Bb]uilds/  
+[Ll]ogs/  
+UserSettings/  
+*.csproj  
+*.unityproj  
+*.sln  
+*.suo  
+*.tmp  
+*.user  
+*.userprefs  
+*.pidb  
+*.booproj  
+"""
+                f.write(unity_gitignore)
+    
+    click.echo(f"Unity project '{project_name}' created successfully.")
+
+cli.add_command(create_web)
+cli.add_command(create_godot)
+cli.add_command(create_unity)
+
+if __name__ == "__main__":
+    cli()

@@ -13,3 +13,9 @@ project_templates:
       - script.js
       - style.css
       - README.md
+  
+  unity:
+    folders: ["Assets", "Scripts", "ProjectSettings"]
+    files:
+      - .gitignore
+      - README.md
