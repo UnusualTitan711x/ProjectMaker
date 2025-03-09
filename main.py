@@ -1,6 +1,7 @@
 import os
 import click
 import yaml
+import subprocess
 
 
 with open("config.yaml", "r") as file:
