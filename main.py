@@ -20,10 +20,11 @@ def cli():
 
 @click.command()
 @click.argument("project_name")
-def create_web(project_name):
+@click.option("--directory", "-d", default=".", help="Directory where the project will be created")
+def create_web(project_name, directory):
     """Creates a basic Web Project"""
 
-    project_path = os.path.join(os.getcwd(), project_name)
+    project_path = os.path.join(directory, project_name)
     
     # Make sure to control which directory to use
     if not os.path.exists(project_path):
@@ -62,10 +63,11 @@ def create_web(project_name):
 
 @click.command()
 @click.argument("project_name")
-def create_godot(project_name):
+@click.option("--directory", "-d", default=".", help="Directory where the project will be created")
+def create_godot(project_name, directory):
     """Creates a Godot 4.4 Project"""
 
-    project_path = os.path.join(os.getcwd(), project_name)
+    project_path = os.path.join(directory, project_name)
     
     # Make sure to control which directory to use
     if not os.path.exists(project_path):
@@ -115,10 +117,13 @@ renderer/rendering_method="forward_plus"
 
     click.echo(f"Godot project '{project_name}' created successfully.")
 
-def create_unity(project_name):
+@click.command()
+@click.argument("project_name")
+@click.option("--directory", "-d", default=".", help="Directory where the project will be created")
+def create_unity(project_name, directory):
     """Creates a Unity Project"""
 
-    project_path = os.path.join(os.getcwd(), project_name)
+    project_path = os.path.join(directory, project_name)
     
     # Make sure to control which directory to use
     if not os.path.exists(project_path):
