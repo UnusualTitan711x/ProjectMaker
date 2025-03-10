@@ -1,23 +1,6 @@
 import os
 import click
-import yaml
-import subprocess
-
-
-with open("config.yaml", "r") as file:
-    config = yaml.safe_load(file)
-
-# # Use os.chdir to change the working directory, and os.mkdir to create a directory
-# os.chdir(r"C:\Users\Arthur Djiomou\Github\ProjectMaker")
-# os.mkdir("TestFolder")
-
-# # Create a file. w+ is to create one if it isn't already existing
-# test_file=open(r"TestFolder/test1.md", "w+")
-
-@click.group()
-def cli():
-    """ProjectMaker CLI Tool"""
-    pass
+from .config import load_config
 
 @click.command()
 @click.argument("project_name")
@@ -25,6 +8,7 @@ def cli():
 def create_web(project_name, directory):
     """Creates a basic Web Project"""
 
+    config = load_config()
     project_path = os.path.join(directory, project_name)
     
     # Make sure to control which directory to use
@@ -68,6 +52,7 @@ def create_web(project_name, directory):
 def create_godot(project_name, directory):
     """Creates a Godot 4.4 Project"""
 
+    config = load_config()
     project_path = os.path.join(directory, project_name)
     
     # Make sure to control which directory to use
@@ -124,6 +109,7 @@ renderer/rendering_method="forward_plus"
 def create_unity(project_name, directory):
     """Creates a Unity Project"""
 
+    config = load_config()
     project_path = os.path.join(directory, project_name)
     
     # Make sure to control which directory to use
@@ -164,10 +150,3 @@ UserSettings/
                 f.write(unity_gitignore)
     
     click.echo(f"Unity project '{project_name}' created successfully.")
-
-cli.add_command(create_web)
-cli.add_command(create_godot)
-cli.add_command(create_unity)
-
-if __name__ == "__main__":
-    cli()
