@@ -19,3 +19,6 @@ project_templates:
     files:
       - .gitignore
       - README.md
+  
+  node:
+    files: ["index.js"]

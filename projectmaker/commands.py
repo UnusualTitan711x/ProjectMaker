@@ -1,5 +1,7 @@
 import os
 import click
+import shutil
+import subprocess
 from .config import load_config
 
 @click.command()
@@ -44,6 +46,14 @@ def create_web(project_name, directory):
             f.close()
 
     click.echo(f"Web project '{project_name}' created successfully.")
+
+    choice = input("Do you want to open VS Code? (Y/N): ")
+    if choice.lower() == "y":
+        code_path = shutil.which("Code")
+        if code_path is None:
+            click.echo("Couldn't open with VS Code.")
+        else:
+            subprocess.run([code_path, project_path])
 
 
 @click.command()
@@ -150,3 +160,44 @@ UserSettings/
                 f.write(unity_gitignore)
     
     click.echo(f"Unity project '{project_name}' created successfully.")
+
+
+@click.command()
+@click.argument("project_name")
+@click.option("--directory", "-d", default=".", help="Directory where the project will be created")
+def create_nodejs(project_name, directory):
+    """Creates a Node.js Project"""
+
+    config = load_config()
+    project_path = os.path.join(directory, project_name)
+    
+    # Make sure to control which directory to use
+    if not os.path.exists(project_path):
+        os.makedirs(project_path)
+    else:
+        click.echo("Directory already exists.")
+        return 
+    
+
+    for file in config["project_templates"]["node"]["files"]:
+        file_path = os.path.join(project_path, file)
+        with open(file_path, "w+") as f:
+            if file == "index.js":
+                app_template = """const express = require('express');
+const app = express();
+app.listen(3000, () => console.log('Server running on port 3000'));"""
+                f.write(app_template)
+
+    choice = input("Do you want to open VS Code? (Y/N): ")
+    if choice.lower() == "y":
+        code_path = shutil.which("Code")
+        if code_path is None:
+            click.echo("Couldn't open with VS Code.")
+        else:
+            subprocess.run([code_path, project_path])
+
+    os.chdir(project_path)
+    npm_path = shutil.which("npm")
+    subprocess.run([npm_path, "init", "-y"])
+    
+    click.echo(f"Node.js project '{project_name}' created successfully.")
