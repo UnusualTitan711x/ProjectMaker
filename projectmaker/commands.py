@@ -6,6 +6,26 @@ from .config import load_config
 
 @click.command()
 @click.argument("project_name")
+@click.argument("type")
+@click.option("--directory", "-d", default=".", help="Directory where the project will be created")
+def create(project_name, type, directory):
+    """Creates a project with a specific type"""
+    
+    ctx = click.get_current_context()
+    
+    if type == "web":
+        ctx.invoke(create_web, project_name=project_name, directory=directory)
+    elif type == "godot":
+        ctx.invoke(create_godot, project_name=project_name, directory=directory)
+    elif type == "nodejs":
+        ctx.invoke(create_nodejs, project_name=project_name, directory=directory)
+    elif type == "unity":
+        ctx.invoke(create_unity, project_name=project_name, directory=directory)
+    else:
+        click.echo(f"Unknown type: {type}")
+
+@click.command()
+@click.argument("project_name")
 @click.option("--directory", "-d", default=".", help="Directory where the project will be created")
 def create_web(project_name, directory):
     """Creates a basic Web Project"""
@@ -43,12 +63,10 @@ def create_web(project_name, directory):
             elif file == "README.md":
                 f.write(f"{project_name} - Web Project")
 
-            f.close()
-
     click.echo(f"Web project '{project_name}' created successfully.")
 
-    choice = input("Do you want to open VS Code? (Y/N): ")
-    if choice.lower() == "y":
+    #choice = click.prompt("Do you want to open VS Code? (Y/N): ", type=str, default="N")
+    if click.confirm("Do you want to open VS Code?"):
         code_path = shutil.which("Code")
         if code_path is None:
             click.echo("Couldn't open with VS Code.")
@@ -108,8 +126,6 @@ renderer/rendering_method="forward_plus"
                 f.write("""# Normalize EOL for all files that Git considers text files.\n* text=auto eol=lf""")
             elif file == ".gitignore":
                 f.write("# Godot 4+ specific ignores\n.godot/\n/android/")
-
-            f.close()
 
     click.echo(f"Godot project '{project_name}' created successfully.")
 
@@ -171,6 +187,11 @@ def create_nodejs(project_name, directory):
     config = load_config()
     project_path = os.path.join(directory, project_name)
     
+    npm_path = shutil.which("npm")
+    if npm_path is None:
+        click.echo("npm not found. Please install Node.js")
+        return
+
     # Make sure to control which directory to use
     if not os.path.exists(project_path):
         os.makedirs(project_path)
@@ -188,7 +209,8 @@ const app = express();
 app.listen(3000, () => console.log('Server running on port 3000'));"""
                 f.write(app_template)
 
-    choice = input("Do you want to open VS Code? (Y/N): ")
+    choice = click.prompt("Do you want to open VS Code? (Y/N): ", type=str, default="N")
+
     if choice.lower() == "y":
         code_path = shutil.which("Code")
         if code_path is None:
@@ -196,8 +218,6 @@ app.listen(3000, () => console.log('Server running on port 3000'));"""
         else:
             subprocess.run([code_path, project_path])
 
-    os.chdir(project_path)
-    npm_path = shutil.which("npm")
-    subprocess.run([npm_path, "init", "-y"])
+    subprocess.run([npm_path, "init", "-y"], cwd=project_path)
     
     click.echo(f"Node.js project '{project_name}' created successfully.")
