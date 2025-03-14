@@ -2,6 +2,9 @@
 
 ProjectMaker is a command-line tool that automates project setup, creates necessary folders, initializes repositories (TBD), and generates an Obsidian template with note files (TBD). It supports various project types, including web, Godot, Unity, and Node.js.
 
+## Note
+This was tested on Windows and WSL (Windows Subsystem for Linux) only.
+
 ## Features
 - Automates project creation for multiple frameworks and technologies
 - Initializes Git repositories automatically
@@ -30,8 +33,20 @@ projectmaker create <project_name> <project_type>
 ```
 Example:
 ```sh
-projectmaker create web MyWebsite
+projectmaker create MyWebsite web
 ```
+
+To precise the directory you want the project to be, run:
+```sh
+projectmaker create <project_name> <project_type> -d (or --directory) <directory_path>
+```
+Example:
+```sh
+projectmaker create MyGodotGame godot -d "C:\Users\[Username]\Projects\New Folder" (On Windoes)
+projectmaker create MyGodotGame godot -d "/home/[Username]/Projects/New Folder" (On MacOS)
+projectmaker create MyGodotGame godot -d "/Users/[Username]/Projects/New Folder" (On Linux)
+```
+
 
 ### Supported Project Types
 - `web` - Initializes an HTML/CSS/JS project
