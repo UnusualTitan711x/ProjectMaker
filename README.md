@@ -1,6 +1,6 @@
 # ProjectMaker
 
-ProjectMaker is a command-line tool that automates project setup, creates necessary folders, initializes repositories, and generates an Obsidian template with note files. It supports various project types, including web, Godot, Unity, and Node.js.
+ProjectMaker is a command-line tool that automates project setup, creates necessary folders, initializes repositories (TBD), and generates an Obsidian template with note files (TBD). It supports various project types, including web, Godot, Unity, and Node.js.
 
 ## Features
 - Automates project creation for multiple frameworks and technologies
