@@ -26,7 +26,7 @@ pip install dist/projectmaker-<version>-py3-none-any.whl
 ### Creating a New Project
 To create a new project, run:
 ```sh
-projectmaker create <project_type> <project_name>
+projectmaker create <project_name> <project_type>
 ```
 Example:
 ```sh
