@@ -5,8 +5,8 @@ import subprocess
 from .config import load_config
 
 @click.command()
-@click.argument("project_name")
 @click.argument("type")
+@click.argument("project_name")
 @click.option("--directory", "-d", default=".", help="Directory where the project will be created")
 def create(project_name, type, directory):
     """Creates a project with a specific type"""
